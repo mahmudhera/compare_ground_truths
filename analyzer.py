@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 
 df_diamond = pd.read_csv('diamond_ko_results_6.4_seed_10')
 df_sourmash = pd.read_csv('sourmash_gather_6.4_seed_10_k_11')
-df_ground_truth = pd.read_csv('ko_ground_truth_6.4_seed_10')
+#df_ground_truth = pd.read_csv('ko_ground_truth_6.4_seed_10')
+df_ground_truth = pd.read_csv('ko_ground_truth_new_6.4_seed_10')
 
 diamond_kos = set(df_diamond['ko_id'])
 ground_truth_kos = set(df_ground_truth['ko_id'])
