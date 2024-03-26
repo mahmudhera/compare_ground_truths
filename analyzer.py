@@ -1,10 +1,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df_diamond = pd.read_csv('diamond_ko_results_6.4_seed_10')
-df_sourmash = pd.read_csv('sourmash_gather_6.4_seed_10_k_11')
-#df_ground_truth = pd.read_csv('ko_ground_truth_6.4_seed_10')
-df_ground_truth = pd.read_csv('ko_ground_truth_new_6.4_seed_10')
+df_diamond = pd.read_csv('test2_ko_dmnd')
+df_ground_truth = pd.read_csv('test2_ko_gt')
+df_sourmash = pd.read_csv('test_sm_gather')
+
+#df_diamond = pd.read_csv('test_ko_dmnd')
+#df_ground_truth = pd.read_csv('test_ko_gt')
 
 diamond_kos = set(df_diamond['ko_id'])
 ground_truth_kos = set(df_ground_truth['ko_id'])
@@ -12,6 +14,22 @@ common_kos_diamond = diamond_kos.intersection(ground_truth_kos)
 
 diamond_abund_columns = ['relative_abundance_by_nucleotides_covered', 'relative_abundance_by_num_reads']
 ground_truth_abund_columns = ['abund_by_num_reads', 'abund_by_num_nts', 'abund_by_mean_cov']
+
+# plot ground truth rel abund vs ground truth rel abund
+for ground_truth_col1 in ground_truth_abund_columns:
+    for ground_truth_col2 in ground_truth_abund_columns:
+        if ground_truth_col1 == ground_truth_col2:
+            continue
+
+        ground_truth_abundances1 = df_ground_truth[ground_truth_col1].tolist()
+        ground_truth_abundances2 = df_ground_truth[ground_truth_col2].tolist()
+
+        plt.scatter(ground_truth_abundances1, ground_truth_abundances2)
+        plt.xlabel(f'Ground Truth Abundance ({ground_truth_col1})')
+        plt.ylabel(f'Ground Truth Abundance ({ground_truth_col2})')
+        plt.title(f'Ground Truth vs Ground Truth Abundance ({ground_truth_col1} vs {ground_truth_col2})')
+        plt.savefig(f'ground_truth_vs_ground_truth_abundance_{ground_truth_col1}_vs_{ground_truth_col2}.png')
+        plt.clf()
 
 # iterate over all combinations of diamond and ground truth abundance columns
 for diamond_col, ground_truth_col in [(diamond_col, ground_truth_col) for diamond_col in diamond_abund_columns for ground_truth_col in ground_truth_abund_columns]:
@@ -31,6 +49,8 @@ for diamond_col, ground_truth_col in [(diamond_col, ground_truth_col) for diamon
     plt.title(f'Ground Truth vs Diamond Abundance ({ground_truth_col} vs {diamond_col})')
     plt.savefig(f'ground_truth_vs_diamond_abundance_{ground_truth_col}_vs_{diamond_col}.png')
     plt.clf()
+
+
 
 sourmash_kos = set(df_sourmash['name'])
 common_kos_sourmash = sourmash_kos.intersection(ground_truth_kos)
